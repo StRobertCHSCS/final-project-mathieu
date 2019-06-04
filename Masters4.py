@@ -6,7 +6,7 @@ Description: Flappy Bird
 
 Author: Mathieu Li
 
-Date: June
+Date: June 2019
 --------------------------------------------------------------------------
 """
 
@@ -175,8 +175,6 @@ class MyGame(arcade.Window):
 
 
 def main():
-    """ Main method """
-
 
     window = MyGame(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
     window.setup()
@@ -185,6 +183,7 @@ def main():
 
 def on_mouse_press(x, y, button, modifiers):
 
+
     # unpack the button list into readable? variables.
     my_button_x, my_button_y, my_button_w, my_button_h = my_button
 
@@ -192,19 +191,19 @@ def on_mouse_press(x, y, button, modifiers):
     if (x > my_button_x and x < my_button_x + my_button_w and
             y > my_button_y and y < my_button_y + my_button_h):
         main()
-    else:
-        print("NOT clicked")
+
 
 
 def setup():
     arcade.open_window(200, 100, "Enter")
     arcade.set_background_color(arcade.color.WHITE)
+
     window = arcade.get_window()
     window.on_draw = on_draw_2
 
 
-
     window.on_mouse_press = on_mouse_press
+
 
     arcade.run()
 
