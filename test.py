@@ -34,7 +34,7 @@ tunnely_positions = []
 tunnel_x_positions = []
 tunnel_y_positions = []
 
-
+#menu box
 def on_draw_2():
     arcade.start_render()
     # Draw in here...
@@ -43,7 +43,7 @@ def on_draw_2():
                                       my_button[2],
                                       my_button[3],
                                       arcade.color.WHITE)
-
+#for loop to generate random y values
 for _ in range(0, 100, 30):
     y = random.randrange(-50, 0)
 
@@ -57,7 +57,6 @@ for _ in range(0, 100, 30):
     y = random.randrange(HEIGHT, HEIGHT + 50)
 
 for x in range(0,100,100):
-
     # append the x and y values to the appropriate list
     tunnelx_positions.append(x)
     tunnely_positions.append(y)
@@ -65,20 +64,18 @@ for x in range(0,100,100):
 
 def main():
     arcade.schedule(update, 1 / 60)
-
-
-
     # Override arcade window methods
     window = arcade.get_window()
-    window.on_draw = on_draw
 
+
+    window.on_draw = on_draw
 
     window.on_key_press = on_key_press
     window.on_key_release = on_key_release
 
-
     arcade.run()
 
+#moving obstacles and player
 def update(delta_time):
     for index in range(len(tunnelx_positions)):
         tunnelx_positions[index] -= 3
@@ -105,23 +102,32 @@ def update(delta_time):
         player_x -= 5
 
 
+# draw objects on screen
 def on_draw():
-
-
     arcade.start_render()
+    texture_3 = arcade.load_texture("Image/background.jpg")
+    arcade.draw_texture_rectangle(150, 230, WIDTH, HEIGHT+50, texture_3)
     # Draw in here...
     for x, y in zip(tunnelx_positions, tunnely_positions):
-        arcade.draw_rectangle_filled(x, y, 30, 400, arcade.color.GREEN)
+        texture = arcade.load_texture("Image/tunneldown.png")
+        arcade.draw_texture_rectangle(x,y,30,400,texture)
 
     for x, y in zip(tunnel_x_positions, tunnel_y_positions):
-        arcade.draw_rectangle_filled(x, y, 30, 400, arcade.color.GREEN)
+        texture = arcade.load_texture("Image/tunnelup.png")
+        arcade.draw_texture_rectangle(x, y, 30, 400, texture)
 
 
     global player_x, player_y
-    arcade.draw_rectangle_filled(player_x,player_y,25,25,arcade.color.RED)
+    texture_2 = arcade.load_texture("Image/character.png")
+    arcade.draw_texture_rectangle(player_x, player_y, 25, 25, texture_2)
 
 
 
+
+
+
+
+# Key press on keyboard to move player around
 def on_key_press(key, modifiers):
     global up_pressed,down_pressed,right_pressed,left_pressed
     if key == arcade.key.W:
@@ -146,7 +152,7 @@ def on_key_release(key, modifiers):
         left_pressed = False
 
 
-
+#mouse press to start the game
 def on_mouse_press(x, y, button, modifiers):
 
     # unpack the button list into readable? variables.
@@ -163,20 +169,15 @@ def on_mouse_press(x, y, button, modifiers):
 
 
 def setup():
-
     arcade.open_window(WIDTH, HEIGHT, "FLAPPY BIRD")
-    arcade.set_background_color(arcade.color.SKY_BLUE)
 
 
     window = arcade.get_window()
-
-    window.on_draw = on_draw_2
 
 
     window.on_mouse_press = on_mouse_press
 
     arcade.run()
-
 
 if __name__ == '__main__':
     setup()
