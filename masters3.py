@@ -27,8 +27,25 @@ VIEWPORT_MARGIN = 40
 
 MOVEMENT_SPEED = 5
 
-def menu():
-    user = input("Do you want to play?: ")
+
+my_button = [250,250, 150, 50]  # x, y, width, height
+
+
+def on_update(delta_time):
+    pass
+
+
+def on_draw():
+
+
+    arcade.start_render()
+    # Draw in here...
+    arcade.draw_xywh_rectangle_filled(my_button[0],
+                                      my_button[1],
+                                      my_button[2],
+                                      my_button[3],
+                                      arcade.color.BLACK)
+
 
 class MyGame(arcade.Window):
     """ Main application class. """
@@ -65,7 +82,7 @@ class MyGame(arcade.Window):
         self.wall_list = arcade.SpriteList()
 
         # Set up the player
-        self.player_sprite = arcade.Sprite("Image/character.png", 0.01)
+        self.player_sprite = arcade.Sprite("Image/character.png", 0.05)
         self.player_sprite.center_x = 64
         self.player_sprite.center_y = 270
         self.player_list.append(self.player_sprite)
@@ -166,14 +183,34 @@ class MyGame(arcade.Window):
                                 SCREEN_HEIGHT + self.view_bottom)
 
 
-def main():
-    """ Main method """
-    menu()
+def on_mouse_press(x, y, button, modifiers):
+    # unpack the button list into readable? variables.
+    my_button_x, my_button_y, my_button_w, my_button_h = my_button
 
-    window = MyGame(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
-    window.setup()
+    # Need to check all four limits of the button.
+    if (x > my_button_x and x < my_button_x + my_button_w and
+            y > my_button_y and y < my_button_y + my_button_h):
+        window = MyGame(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
+        window.setup()
+        arcade.run()
+
+    else:
+        print("not clicked")
+
+
+def setup():
+    arcade.open_window(SCREEN_WIDTH, SCREEN_HEIGHT, "My Arcade Game")
+    arcade.set_background_color(arcade.color.WHITE)
+
+    # Override arcade window methods
+    window = arcade.get_window()
+    window.on_draw = on_draw
+
+    window.on_mouse_press = on_mouse_press
+
+    arcade.finish_render()
+
     arcade.run()
 
 
-if __name__ == "__main__":
-    main()
+setup()

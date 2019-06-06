@@ -26,7 +26,7 @@ left_pressed = False
 right_pressed = False
 up_released = False
 
-my_button = [75,250, 150, 50]  # x, y, width, height
+my_button = [150,240, 150, 50]  # x, y, width, height
 
 angle = 0
 
@@ -38,14 +38,19 @@ tunnel_x_positions = []
 tunnel_y_positions = []
 
 #menu box
+
+
 def on_draw_2():
+
     arcade.start_render()
+
     # Draw in here...
     arcade.draw_xywh_rectangle_filled(my_button[0],
                                       my_button[1],
                                       my_button[2],
                                       my_button[3],
                                       arcade.color.WHITE)
+
 #for loop to generate random y values
 for _ in range(0, 100, 30):
     y = random.randrange(-50, 0)
@@ -66,12 +71,13 @@ for x in range(0,100,100):
 
 
 def main():
-    arcade.schedule(update, 1 / 60)
-    # Override arcade window methods
     window = arcade.get_window()
 
 
     window.on_draw = on_draw
+    arcade.schedule(update, 1 / 60)
+    # Override arcade window methods
+
 
     window.on_key_press = on_key_press
     window.on_key_release = on_key_release
@@ -110,6 +116,8 @@ def update(delta_time):
 # draw objects on screen
 def on_draw():
     arcade.start_render()
+
+
     texture_3 = arcade.load_texture("Image/background.jpg")
     arcade.draw_texture_rectangle(150, 230, WIDTH, HEIGHT+50, texture_3)
     # Draw in here...
@@ -166,15 +174,13 @@ def on_mouse_press(x, y, button, modifiers):
             y > my_button_y and y < my_button_y + my_button_h):
         main()
     else:
-        main()
+        print("Not clicked")
 
 def setup():
     arcade.open_window(WIDTH, HEIGHT, "FLAPPY BIRD")
-
-
+    arcade.set_background_color(arcade.color.WHITE)
     window = arcade.get_window()
-
-
+    window.on_draw_2 = on_draw_2
     window.on_mouse_press = on_mouse_press
 
     arcade.run()
