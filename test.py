@@ -24,8 +24,11 @@ up_pressed = False
 down_pressed = False
 left_pressed = False
 right_pressed = False
+up_released = False
 
 my_button = [75,250, 150, 50]  # x, y, width, height
+
+angle = 0
 
 # first set up empty lists
 tunnelx_positions = []
@@ -91,9 +94,11 @@ def update(delta_time):
             tunnel_y_positions[index] = random.randrange(-70,50)
             tunnel_x_positions[index] = WIDTH + 35
 
-    global up_pressed, player_y, player_x,down_pressed,right_pressed,left_pressed
+    global up_pressed, player_y, player_x,down_pressed,right_pressed,left_pressed,up_released
     if up_pressed:
-        player_y += 5
+        player_y += 8
+    if up_released:
+        player_y -= 2.5
     if down_pressed:
         player_y -= 5
     if right_pressed:
@@ -119,19 +124,15 @@ def on_draw():
 
     global player_x, player_y
     texture_2 = arcade.load_texture("Image/character.png")
-    arcade.draw_texture_rectangle(player_x, player_y, 25, 25, texture_2)
-
-
-
-
-
+    arcade.draw_texture_rectangle(player_x, player_y, 25, 25, texture_2,angle)
 
 
 # Key press on keyboard to move player around
 def on_key_press(key, modifiers):
-    global up_pressed,down_pressed,right_pressed,left_pressed
-    if key == arcade.key.W:
+    global up_pressed,down_pressed,right_pressed,left_pressed,angle
+    if key == arcade.key.SPACE:
         up_pressed = True
+        angle = 0
     if key == arcade.key.S:
         down_pressed = True
     if key == arcade.key.D:
@@ -141,9 +142,11 @@ def on_key_press(key, modifiers):
 
 
 def on_key_release(key, modifiers):
-    global up_pressed,down_pressed,right_pressed,left_pressed
-    if key == arcade.key.W:
+    global up_pressed,down_pressed,right_pressed,left_pressed,up_released,angle
+    if key == arcade.key.SPACE:
         up_pressed = False
+        up_released = True
+        angle -= 30
     if key == arcade.key.S:
         down_pressed = False
     if key == arcade.key.D:
@@ -164,9 +167,6 @@ def on_mouse_press(x, y, button, modifiers):
         main()
     else:
         main()
-
-
-
 
 def setup():
     arcade.open_window(WIDTH, HEIGHT, "FLAPPY BIRD")
