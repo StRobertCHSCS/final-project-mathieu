@@ -174,7 +174,7 @@ def on_mouse_press(x, y, button, modifiers):
             y > my_button_y and y < my_button_y + my_button_h):
         main()
     else:
-        print("Not clicked")
+        main()
 
 def setup():
     arcade.open_window(WIDTH, HEIGHT, "FLAPPY BIRD")

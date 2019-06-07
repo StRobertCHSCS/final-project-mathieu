@@ -28,7 +28,7 @@ VIEWPORT_MARGIN = 40
 MOVEMENT_SPEED = 5
 
 
-my_button = [250,250, 150, 50]  # x, y, width, height
+my_button = [250,250, 500, 500]  # x, y, width, height
 
 
 def on_update(delta_time):
@@ -92,7 +92,7 @@ class MyGame(arcade.Window):
             for y in range(0, 601, 300):
                 # Randomly skip a box so the player can find a way through
                 if random.randrange(10) > 1:
-                    wall = arcade.Sprite("Image/tunnel.png", SPRITE_SCALING_2)
+                    wall = arcade.Sprite("Image/tunnel.png", 0.1)
                     wall.center_x += 102
                     wall.center_y = y
                     self.wall_list.append(wall)
@@ -122,8 +122,8 @@ class MyGame(arcade.Window):
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed. """
 
-        if key == arcade.key.UP:
-            self.player_sprite.change_y = MOVEMENT_SPEED
+        if key == arcade.key.SPACE:
+            self.player_sprite.change_y *= 0.95
         elif key == arcade.key.DOWN:
             self.player_sprite.change_y = -MOVEMENT_SPEED
         elif key == arcade.key.LEFT:
@@ -131,13 +131,20 @@ class MyGame(arcade.Window):
         elif key == arcade.key.RIGHT:
             self.player_sprite.change_x = MOVEMENT_SPEED
 
+        self.player_sprite.change_y = 1
+
+
+
     def on_key_release(self, key, modifiers):
         """Called when the user releases a key. """
 
-        if key == arcade.key.UP or key == arcade.key.DOWN:
-            self.player_sprite.change_y = 0
+        if key == arcade.key.SPACE:
+            self.player_sprite.change_y -= -2
         elif key == arcade.key.LEFT or key == arcade.key.RIGHT:
             self.player_sprite.change_x = 0
+
+        self.player_sprite.change_y = 1
+
 
     def update(self, delta_time):
         """ Movement and game logic """
