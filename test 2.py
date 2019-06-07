@@ -93,7 +93,7 @@ class MyGame(arcade.Window):
                 # Randomly skip a box so the player can find a way through
                 if random.randrange(10) > 1:
                     wall = arcade.Sprite("Image/tunnel.png", 0.1)
-                    wall.center_x += 102
+                    wall.center_x = 350
                     wall.center_y = y
                     self.wall_list.append(wall)
 
@@ -123,31 +123,21 @@ class MyGame(arcade.Window):
         """Called whenever a key is pressed. """
 
         if key == arcade.key.SPACE:
-            self.player_sprite.change_y *= 0.95
-        elif key == arcade.key.DOWN:
-            self.player_sprite.change_y = -MOVEMENT_SPEED
-        elif key == arcade.key.LEFT:
-            self.player_sprite.change_x = -MOVEMENT_SPEED
-        elif key == arcade.key.RIGHT:
-            self.player_sprite.change_x = MOVEMENT_SPEED
-
-        self.player_sprite.change_y = 1
-
+            self.player_sprite.change_y = MOVEMENT_SPEED
 
 
     def on_key_release(self, key, modifiers):
         """Called when the user releases a key. """
 
         if key == arcade.key.SPACE:
-            self.player_sprite.change_y -= -2
-        elif key == arcade.key.LEFT or key == arcade.key.RIGHT:
-            self.player_sprite.change_x = 0
-
-        self.player_sprite.change_y = 1
+            self.player_sprite.change_y = -6
 
 
     def update(self, delta_time):
         """ Movement and game logic """
+
+        self.wall_list.change_x -= 1
+
 
         # Call update on all sprites (The sprites don't do much in this
         # example though.)

@@ -111,6 +111,10 @@ def update(delta_time):
         player_x += 5
     if left_pressed:
         player_x -= 5
+    if player_y >= HEIGHT:
+        player_y = HEIGHT
+    if player_y <= 0:
+        player_y = 0
 
 
 # draw objects on screen
@@ -133,6 +137,9 @@ def on_draw():
     global player_x, player_y
     texture_2 = arcade.load_texture("Image/character.png")
     arcade.draw_texture_rectangle(player_x, player_y, 25, 25, texture_2,angle)
+
+    if player_y <= 0 or player_y >= HEIGHT:
+        arcade.draw_text("GAME OVER",120,420,arcade.color.WHITE,20)
 
 
 # Key press on keyboard to move player around
@@ -180,7 +187,7 @@ def setup():
     arcade.open_window(WIDTH, HEIGHT, "FLAPPY BIRD")
     arcade.set_background_color(arcade.color.WHITE)
     window = arcade.get_window()
-    window.on_draw_2 = on_draw_2
+
     window.on_mouse_press = on_mouse_press
 
     arcade.run()
