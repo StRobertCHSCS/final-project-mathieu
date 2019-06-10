@@ -26,6 +26,8 @@ left_pressed = False
 right_pressed = False
 up_released = False
 
+tunnel = False
+
 my_button = [150,240, 150, 50]  # x, y, width, height
 
 angle = 0
@@ -51,18 +53,12 @@ def on_draw_2():
                                       my_button[3],
                                       arcade.color.WHITE)
 
-#for loop to generate random y values
-for _ in range(0, 100, 30):
-    y = random.randrange(-50,0)
-
-for x in range(0,50,50):
-    tunnel_x_positions.append(x)
-    tunnel_y_positions.append(y)
+#for loop to generate random y value
 
 # loop 100 times
 for _ in range(0, 200, 30):
     # generate random x and y values
-    y = random.randrange(HEIGHT, HEIGHT + 50)
+    y = HEIGHT//2
 
 for x in range(0,50,50):
     # append the x and y values to the appropriate list
@@ -86,21 +82,25 @@ def main():
 
 #moving obstacles and player
 def update(delta_time):
+
+    global up_pressed, player_y, player_x,down_pressed,right_pressed,left_pressed,up_released,tunnel
+
     for index in range(len(tunnelx_positions)):
         tunnelx_positions[index] -= 3
 
         if tunnelx_positions[index] < 0:
-            tunnely_positions[index] = random.randrange(HEIGHT, HEIGHT + 70,50)
+            tunnel = False
+
+            tunnely_positions[index] = HEIGHT//2
             tunnelx_positions[index] = WIDTH + 35
+        if tunnelx_positions[index] > 120 and tunnelx_positions[index] < 170:
+            tunnel = True
+        if player_y >= 310 and tunnel == True:
+            player_y = 0
+            arcade.draw_text("GAME OVER",120,420,arcade.color.WHITE,20)
 
-    for index in range(len(tunnel_x_positions)):
-        tunnel_x_positions[index] -= 3
 
-        if tunnel_x_positions[index] < 0:
-            tunnel_y_positions[index] = random.randrange(-70,50,50)
-            tunnel_x_positions[index] = WIDTH + 35
 
-    global up_pressed, player_y, player_x,down_pressed,right_pressed,left_pressed,up_released
     if up_pressed:
         player_y += 8
     if up_released:
@@ -117,6 +117,7 @@ def update(delta_time):
         player_y = 0
 
 
+
 # draw objects on screen
 def on_draw():
     arcade.start_render()
@@ -126,12 +127,8 @@ def on_draw():
     arcade.draw_texture_rectangle(150, 230, WIDTH, HEIGHT+50, texture_3)
     # Draw in here...
     for x, y in zip(tunnelx_positions, tunnely_positions):
-        texture = arcade.load_texture("Image/tunneldown.png")
-        arcade.draw_texture_rectangle(x,y,30,400,texture)
-
-    for x, y in zip(tunnel_x_positions, tunnel_y_positions):
-        texture = arcade.load_texture("Image/tunnelup.png")
-        arcade.draw_texture_rectangle(x, y, 30, 400, texture)
+        texture = arcade.load_texture("Image/pipe3.png")
+        arcade.draw_texture_rectangle(x,y,200,700,texture)
 
 
     global player_x, player_y
