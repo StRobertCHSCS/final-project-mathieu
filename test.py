@@ -53,18 +53,18 @@ def on_draw_2():
 
 #for loop to generate random y values
 for _ in range(0, 100, 30):
-    y = random.randrange(-50, 0)
+    y = random.randrange(-50,0)
 
-for x in range(0,100,100):
+for x in range(0,50,50):
     tunnel_x_positions.append(x)
     tunnel_y_positions.append(y)
 
 # loop 100 times
-for _ in range(0, 100, 30):
+for _ in range(0, 200, 30):
     # generate random x and y values
     y = random.randrange(HEIGHT, HEIGHT + 50)
 
-for x in range(0,100,100):
+for x in range(0,50,50):
     # append the x and y values to the appropriate list
     tunnelx_positions.append(x)
     tunnely_positions.append(y)
@@ -90,14 +90,14 @@ def update(delta_time):
         tunnelx_positions[index] -= 3
 
         if tunnelx_positions[index] < 0:
-            tunnely_positions[index] = random.randrange(HEIGHT, HEIGHT + 70)
+            tunnely_positions[index] = random.randrange(HEIGHT, HEIGHT + 70,50)
             tunnelx_positions[index] = WIDTH + 35
 
     for index in range(len(tunnel_x_positions)):
         tunnel_x_positions[index] -= 3
 
         if tunnel_x_positions[index] < 0:
-            tunnel_y_positions[index] = random.randrange(-70,50)
+            tunnel_y_positions[index] = random.randrange(-70,50,50)
             tunnel_x_positions[index] = WIDTH + 35
 
     global up_pressed, player_y, player_x,down_pressed,right_pressed,left_pressed,up_released
