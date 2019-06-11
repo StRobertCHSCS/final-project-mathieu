@@ -88,7 +88,7 @@ def update(delta_time):
         if tunnel_x_positions[index] < 0:
             tunnel_2 = False
             tunnel_y_positions[index] = 200
-            tunnel_x_positions[index] = WIDTH 
+            tunnel_x_positions[index] = WIDTH
 
 
         if tunnelx_positions[index] >= 125 and tunnelx_positions[index] <= 165:
