@@ -14,7 +14,7 @@ import arcade
 
 #Screen Height and Width
 WIDTH = 300
-HEIGHT = 480
+HEIGHT = 450
 
 player_x = WIDTH/2
 player_y = HEIGHT/2
@@ -98,6 +98,7 @@ def update(delta_time):
         if player_y >= 310 and tunnel == True:
             player_y = 0
             arcade.draw_text("GAME OVER",120,420,arcade.color.WHITE,20)
+            arcade.play_sound("audio/hit.wav")
 
 
 
@@ -145,6 +146,7 @@ def on_key_press(key, modifiers):
     if key == arcade.key.SPACE:
         up_pressed = True
         angle = 25
+        arcade.play_sound("audio/jump.wav")
     if key == arcade.key.S:
         down_pressed = True
     if key == arcade.key.D:
@@ -179,6 +181,7 @@ def on_mouse_press(x, y, button, modifiers):
         main()
     else:
         main()
+        arcade.play_sound("audio/background.wav")
 
 def setup():
     arcade.open_window(WIDTH, HEIGHT, "FLAPPY BIRD")
