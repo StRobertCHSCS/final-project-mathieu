@@ -1,216 +1,209 @@
 """
--------------------------------------------------------------------------
+----------------------------------------------------------------------------------
 Name: Finalproject.py
 
-Description: Flappy Bird
+Description: Flappy bird
 
 Author: Mathieu Li
 
-Date: June
---------------------------------------------------------------------------
+Date: June 2019
+----------------------------------------------------------------------------------
 """
-
 import random
 import arcade
-import os
 
-SPRITE_SCALING = 0.01
-SPRITE_SCALING_2 = 0.2
+#Screen Height and Width
+WIDTH = 300
+HEIGHT = 450
 
-SCREEN_WIDTH = 500
-SCREEN_HEIGHT = 600
-SCREEN_TITLE = "FLAPPY BIRD"
+player_x = WIDTH/2
+player_y = HEIGHT/2
 
-# How many pixels to keep as a minimum margin between the character
-# and the edge of the screen.
-VIEWPORT_MARGIN = 40
+# Variables to record if certain keys are being pressed.
+up_pressed = False
+down_pressed = False
+left_pressed = False
+right_pressed = False
+up_released = False
 
-MOVEMENT_SPEED = 5
+tunnel_1 = False
+tunnel_2 = False
+
+my_button = [150,240, 150, 50]  # x, y, width, height
+
+angle = 0
+
+# first set up empty lists
+tunnelx_positions = [WIDTH+5]
+tunnely_positions = [HEIGHT//2]
+
+tunnel_x_positions = [WIDTH+500]
+tunnel_y_positions = [200]
+
+#menu box
 
 
-my_button = [250,250, 150, 50]  # x, y, width, height
-
-
-def on_update(delta_time):
-    pass
-
-
-def on_draw():
-
+def on_draw_2():
 
     arcade.start_render()
+
     # Draw in here...
     arcade.draw_xywh_rectangle_filled(my_button[0],
                                       my_button[1],
                                       my_button[2],
                                       my_button[3],
-                                      arcade.color.BLACK)
+                                      arcade.color.WHITE)
+
+#for loop to generate random y value
 
 
-class MyGame(arcade.Window):
-    """ Main application class. """
-
-    def __init__(self, width, height, title):
-        """
-        Initializer
-        """
-        super().__init__(width, height, title)
-
-        # Set the working directory (where we expect to find files) to the same
-        # directory this .py file is in. You can leave this out of your own
-        # code, but it is needed to easily run the examples using "python -m"
-        # as mentioned at the top of this program.
-        file_path = os.path.dirname(os.path.abspath(__file__))
-        os.chdir(file_path)
-
-        # Sprite lists
-        self.player_list = None
-        self.coin_list = None
-
-        # Set up the player
-        self.player_sprite = None
-        self.wall_list = None
-        self.physics_engine = None
-        self.view_bottom = 0
-        self.view_left = 0
-
-    def setup(self):
-        """ Set up the game and initialize the variables. """
-
-        # Sprite lists
-        self.player_list = arcade.SpriteList()
-        self.wall_list = arcade.SpriteList()
-
-        # Set up the player
-        self.player_sprite = arcade.Sprite("Image/character.png", 0.05)
-        self.player_sprite.center_x = 64
-        self.player_sprite.center_y = 270
-        self.player_list.append(self.player_sprite)
-
-        # -- Set up several columns of walls
-        for x in range(200, 30000, 200):
-            for y in range(0, 601, 300):
-                # Randomly skip a box so the player can find a way through
-                if random.randrange(10) > 1:
-                    wall = arcade.Sprite("Image/tunnel.png", SPRITE_SCALING_2)
-                    wall.center_x += 102
-                    wall.center_y = y
-                    self.wall_list.append(wall)
-
-        self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite, self.wall_list)
-
-        # Set the background color
-        arcade.set_background_color(arcade.color.WHITE)
-
-        # Set the viewport boundaries
-        # These numbers set where we have 'scrolled' to.
-        self.view_left = 0
-        self.view_bottom = 0
-
-    def on_draw(self):
-        """
-        Render the screen.
-        """
-
-        # This command has to happen before we start drawing
-        arcade.start_render()
-
-        # Draw all the sprites.
-        self.wall_list.draw()
-        self.player_list.draw()
-
-    def on_key_press(self, key, modifiers):
-        """Called whenever a key is pressed. """
-
-        if key == arcade.key.UP:
-            self.player_sprite.change_y = MOVEMENT_SPEED
-        elif key == arcade.key.DOWN:
-            self.player_sprite.change_y = -MOVEMENT_SPEED
-        elif key == arcade.key.LEFT:
-            self.player_sprite.change_x = -MOVEMENT_SPEED
-        elif key == arcade.key.RIGHT:
-            self.player_sprite.change_x = MOVEMENT_SPEED
-
-    def on_key_release(self, key, modifiers):
-        """Called when the user releases a key. """
-
-        if key == arcade.key.UP or key == arcade.key.DOWN:
-            self.player_sprite.change_y = 0
-        elif key == arcade.key.LEFT or key == arcade.key.RIGHT:
-            self.player_sprite.change_x = 0
-
-    def update(self, delta_time):
-        """ Movement and game logic """
-
-        # Call update on all sprites (The sprites don't do much in this
-        # example though.)
-        self.physics_engine.update()
-
-        # --- Manage Scrolling ---
-
-        # Track if we need to change the viewport
-
-        changed = False
-
-        # Scroll left
-        left_bndry = self.view_left + VIEWPORT_MARGIN
-        if self.player_sprite.left < left_bndry:
-            self.view_left -= left_bndry - self.player_sprite.left
-            changed = True
-
-        # Scroll right
-        right_bndry = self.view_left + SCREEN_WIDTH - VIEWPORT_MARGIN
-        if self.player_sprite.right > right_bndry:
-            self.view_left += self.player_sprite.right - right_bndry
-            changed = True
-
-        # Scroll up
-        top_bndry = self.view_bottom + SCREEN_HEIGHT - VIEWPORT_MARGIN
-        if self.player_sprite.top > top_bndry:
-            self.view_bottom += self.player_sprite.top - top_bndry
-            changed = True
-
-        # Scroll down
-        bottom_bndry = self.view_bottom + VIEWPORT_MARGIN
-        if self.player_sprite.bottom < bottom_bndry:
-            self.view_bottom -= bottom_bndry - self.player_sprite.bottom
-            changed = True
-
-        if changed:
-            arcade.set_viewport(self.view_left,
-                                SCREEN_WIDTH + self.view_left,
-                                self.view_bottom,
-                                SCREEN_HEIGHT + self.view_bottom)
+def main():
+    window = arcade.get_window()
 
 
+    window.on_draw = on_draw
+    arcade.schedule(update, 1 / 60)
+    # Override arcade window methods
+
+
+    window.on_key_press = on_key_press
+    window.on_key_release = on_key_release
+
+    arcade.run()
+
+#moving obstacles and player
+def update(delta_time):
+
+    global up_pressed, player_y, player_x,down_pressed,right_pressed,left_pressed,up_released,tunnel_1,tunnel_2
+
+    for index in range(len(tunnelx_positions)):
+        tunnelx_positions[index] -= 3
+        tunnel_x_positions[index] -= 3
+
+        if tunnelx_positions[index] < 0:
+            tunnel_1 = False
+            tunnely_positions[index] = HEIGHT//2
+            tunnelx_positions[index] = WIDTH + 5
+
+        if tunnel_x_positions[index] < 0:
+            tunnel_2 = False
+            tunnel_y_positions[index] = 200
+            tunnel_x_positions[index] = WIDTH 
+
+
+        if tunnelx_positions[index] >= 125 and tunnelx_positions[index] <= 165:
+            tunnel_1 = True
+            tunnel_2 = False
+
+        if tunnel_x_positions[index] >= 125 and tunnel_x_positions[index] <= 165:
+            tunnel_2 = True
+            tunnel_1 = False
+
+        if player_y >= 280 and tunnel_1 == True:
+            player_y = 0
+            tunnel_2 = False
+
+        if player_y >= 250 and tunnel_2 == True:
+            player_y = 0
+            tunnel_1 = False
+
+        if player_y == 0:
+            arcade.draw_text("GAME OVER",120,420,arcade.color.WHITE,20)
+
+
+    if up_pressed:
+        player_y += 7
+    if up_released:
+        player_y -= 2.5
+    if down_pressed:
+        player_y -= 5
+    if right_pressed:
+        player_x += 5
+    if left_pressed:
+        player_x -= 5
+    if player_y >= HEIGHT:
+        player_y = HEIGHT
+    if player_y <= 0:
+        player_y = 0
+
+
+
+# draw objects on screen
+def on_draw():
+    arcade.start_render()
+
+
+    texture_3 = arcade.load_texture("Image/background.jpg")
+    arcade.draw_texture_rectangle(150, 230, WIDTH, HEIGHT+50, texture_3)
+    # Draw in here...
+    for x, y in zip(tunnelx_positions, tunnely_positions):
+        texture = arcade.load_texture("Image/pipe3.png")
+        arcade.draw_texture_rectangle(x,y,200,600,texture)
+
+    for x,y in zip(tunnel_x_positions, tunnel_y_positions):
+        texture = arcade.load_texture("Image/pipe3.png")
+        arcade.draw_texture_rectangle(x,y,200,600,texture)
+
+
+    global player_x, player_y
+    texture_2 = arcade.load_texture("Image/character.png")
+    arcade.draw_texture_rectangle(player_x, player_y, 50, 50, texture_2,angle)
+
+    if player_y <= 0 or player_y >= HEIGHT:
+        arcade.draw_text("GAME OVER",120,420,arcade.color.WHITE,20)
+
+
+# Key press on keyboard to move player around
+def on_key_press(key, modifiers):
+    global up_pressed,down_pressed,right_pressed,left_pressed,angle
+    if key == arcade.key.SPACE:
+        up_pressed = True
+        angle = 25
+
+    if key == arcade.key.S:
+        down_pressed = True
+    if key == arcade.key.D:
+        right_pressed = True
+    if key == arcade.key.A:
+        left_pressed = True
+
+
+def on_key_release(key, modifiers):
+    global up_pressed,down_pressed,right_pressed,left_pressed,up_released,angle
+    if key == arcade.key.SPACE:
+        up_pressed = False
+        up_released = True
+        angle -= 50
+    if key == arcade.key.S:
+        down_pressed = False
+    if key == arcade.key.D:
+        right_pressed = False
+    if key == arcade.key.A:
+        left_pressed = False
+
+
+#mouse press to start the game
 def on_mouse_press(x, y, button, modifiers):
+
     # unpack the button list into readable? variables.
     my_button_x, my_button_y, my_button_w, my_button_h = my_button
 
     # Need to check all four limits of the button.
     if (x > my_button_x and x < my_button_x + my_button_w and
             y > my_button_y and y < my_button_y + my_button_h):
-        window = MyGame(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
-        window.setup()
-        arcade.run()
-
+        main()
     else:
-        print("not clicked")
-
+        main()
 
 def setup():
-    arcade.open_window(SCREEN_WIDTH, SCREEN_HEIGHT, "My Arcade Game")
+    arcade.open_window(WIDTH, HEIGHT, "FLAPPY BIRD")
     arcade.set_background_color(arcade.color.WHITE)
-
-    # Override arcade window methods
     window = arcade.get_window()
-    window.on_draw = on_draw
 
     window.on_mouse_press = on_mouse_press
 
-    arcade.finish_render()
-
     arcade.run()
 
+if __name__ == '__main__':
+    setup()
 
-setup()
