@@ -17,7 +17,7 @@ WIDTH = 300
 HEIGHT = 450
 
 player_x = WIDTH/2
-player_y = HEIGHT/2
+player_y = 180
 
 # Variables to record if certain keys are being pressed.
 up_pressed = False
@@ -91,11 +91,11 @@ def update(delta_time):
             tunnel_x_positions[index] = WIDTH
 
 
-        if tunnelx_positions[index] >= 125 and tunnelx_positions[index] <= 165:
+        if tunnelx_positions[index] == WIDTH//2:
             tunnel_1 = True
             tunnel_2 = False
 
-        if tunnel_x_positions[index] >= 125 and tunnel_x_positions[index] <= 165:
+        if tunnel_x_positions[index] == WIDTH//2:
             tunnel_2 = True
             tunnel_1 = False
 
@@ -138,16 +138,16 @@ def on_draw():
     # Draw in here...
     for x, y in zip(tunnelx_positions, tunnely_positions):
         texture = arcade.load_texture("Image/pipe3.png")
-        arcade.draw_texture_rectangle(x,y,200,600,texture)
+        arcade.draw_texture_rectangle(x,y,300,600,texture)
 
     for x,y in zip(tunnel_x_positions, tunnel_y_positions):
         texture = arcade.load_texture("Image/pipe3.png")
-        arcade.draw_texture_rectangle(x,y,200,600,texture)
+        arcade.draw_texture_rectangle(x,y,300,600,texture)
 
 
     global player_x, player_y
     texture_2 = arcade.load_texture("Image/character.png")
-    arcade.draw_texture_rectangle(player_x, player_y, 50, 50, texture_2,angle)
+    arcade.draw_texture_rectangle(player_x, player_y, 45, 45, texture_2,angle)
 
     if player_y <= 0 or player_y >= HEIGHT:
         arcade.draw_text("GAME OVER",120,420,arcade.color.WHITE,20)
