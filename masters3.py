@@ -17,7 +17,7 @@ WIDTH = 300
 HEIGHT = 450
 
 player_x = WIDTH/2
-player_y = 180
+player_y = 225
 
 # Variables to record if certain keys are being pressed.
 up_pressed = False
@@ -28,6 +28,7 @@ up_released = False
 
 tunnel_1 = False
 tunnel_2 = False
+game_status = True
 
 my_button = [150,240, 150, 50]  # x, y, width, height
 
@@ -74,7 +75,7 @@ def main():
 #moving obstacles and player
 def update(delta_time):
 
-    global up_pressed, player_y, player_x,down_pressed,right_pressed,left_pressed,up_released,tunnel_1,tunnel_2
+    global up_pressed, player_y, player_x,down_pressed,right_pressed,left_pressed,up_released,tunnel_1,tunnel_2,game_status
 
     for index in range(len(tunnelx_positions)):
         tunnelx_positions[index] -= 3
@@ -91,21 +92,25 @@ def update(delta_time):
             tunnel_x_positions[index] = WIDTH
 
 
-        if tunnelx_positions[index] == WIDTH//2:
+        if tunnelx_positions[index] >= 130 and tunnelx_positions[index] <= 170:
             tunnel_1 = True
             tunnel_2 = False
 
-        if tunnel_x_positions[index] == WIDTH//2:
+
+        if player_y >= 280 and tunnel_1 == True:
+            player_y -= 3
+            tunnel_2 = False
+            game_status = False
+
+        if tunnel_x_positions[index] >= 130 and tunnel_x_positions[index] <= 170:
             tunnel_2 = True
             tunnel_1 = False
 
-        if player_y >= 280 and tunnel_1 == True:
-            player_y = 0
-            tunnel_2 = False
-
-        if player_y >= 250 and tunnel_2 == True:
-            player_y = 0
+        if player_y > 240 and tunnel_2 == True:
             tunnel_1 = False
+            player_y -= 3
+            game_status = False
+
 
         if player_y == 0:
             arcade.draw_text("GAME OVER",120,420,arcade.color.WHITE,20)
@@ -138,11 +143,11 @@ def on_draw():
     # Draw in here...
     for x, y in zip(tunnelx_positions, tunnely_positions):
         texture = arcade.load_texture("Image/pipe3.png")
-        arcade.draw_texture_rectangle(x,y,300,600,texture)
+        arcade.draw_texture_rectangle(x,y,250,600,texture)
 
     for x,y in zip(tunnel_x_positions, tunnel_y_positions):
         texture = arcade.load_texture("Image/pipe3.png")
-        arcade.draw_texture_rectangle(x,y,300,600,texture)
+        arcade.draw_texture_rectangle(x,y,250,600,texture)
 
 
     global player_x, player_y
@@ -166,6 +171,12 @@ def on_key_press(key, modifiers):
         right_pressed = True
     if key == arcade.key.A:
         left_pressed = True
+
+    if game_status == False:
+        if key == arcade.key.SPACE:
+            up_pressed = False
+            up_released = False
+            angle = -50
 
 
 def on_key_release(key, modifiers):
