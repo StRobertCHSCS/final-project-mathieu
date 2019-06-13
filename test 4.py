@@ -13,11 +13,11 @@ import random
 import arcade
 
 #Screen Height and Width
-WIDTH = 300
-HEIGHT = 450
+WIDTH = 400
+HEIGHT = 420
 
 player_x = WIDTH/2
-player_y = 225
+player_y = HEIGHT/2
 
 # Variables to record if certain keys are being pressed.
 up_pressed = False
@@ -38,7 +38,7 @@ angle = 0
 tunnelx_positions = [WIDTH+5]
 tunnely_positions = [HEIGHT//2]
 
-tunnel_x_positions = [WIDTH+500]
+tunnel_x_positions = [WIDTH+5]
 tunnel_y_positions = [200]
 
 #menu box
@@ -79,28 +79,30 @@ def update(delta_time):
 
     for index in range(len(tunnelx_positions)):
         tunnelx_positions[index] -= 3
-        tunnel_x_positions[index] -= 3
 
-        if tunnelx_positions[index] < 0:
+        if tunnelx_positions[index] < 100:
             tunnel_1 = False
-            tunnely_positions[index] = HEIGHT//2
-            tunnelx_positions[index] = WIDTH + 5
-
-        if tunnel_x_positions[index] < 0:
-            tunnel_2 = False
             tunnel_y_positions[index] = 200
-            tunnel_x_positions[index] = WIDTH
+            tunnel_x_positions[index] -= 3
+            tunnelx_positions[index] = WIDTH + 5
 
 
         if tunnelx_positions[index] >= 130 and tunnelx_positions[index] <= 170:
             tunnel_1 = True
             tunnel_2 = False
 
-
         if player_y >= 280 and tunnel_1 == True:
-            player_y -= 3
+            player_y -= 5
             tunnel_2 = False
             game_status = False
+            arcade.play_sound("audio/hit.wav")
+
+        if tunnel_x_positions[index] < 0:
+            tunnel_2 = False
+
+            tunnelx_positions[index] -= 3
+            tunnely_positions[index] = HEIGHT//2
+            tunnel_x_positions[index] = WIDTH + 5
 
         if tunnel_x_positions[index] >= 130 and tunnel_x_positions[index] <= 170:
             tunnel_2 = True
@@ -110,6 +112,7 @@ def update(delta_time):
             tunnel_1 = False
             player_y -= 5
             game_status = False
+            arcade.play_sound("audio/hit.wav")
 
 
         if player_y == 0:
@@ -117,9 +120,9 @@ def update(delta_time):
 
 
     if up_pressed:
-        player_y += 7
+        player_y += 10
     if up_released:
-        player_y -= 2.5
+        player_y -= 4
     if down_pressed:
         player_y -= 5
     if right_pressed:
@@ -139,7 +142,7 @@ def on_draw():
 
 
     texture_3 = arcade.load_texture("Image/background.jpg")
-    arcade.draw_texture_rectangle(150, 230, WIDTH, HEIGHT+50, texture_3)
+    arcade.draw_texture_rectangle(WIDTH/2,HEIGHT/2, WIDTH, HEIGHT, texture_3)
     # Draw in here...
     for x, y in zip(tunnelx_positions, tunnely_positions):
         texture = arcade.load_texture("Image/pipe3.png")
@@ -164,6 +167,7 @@ def on_key_press(key, modifiers):
     if key == arcade.key.SPACE:
         up_pressed = True
         angle = 25
+        arcade.play_sound("audio/jump.wav")
 
     if key == arcade.key.S:
         down_pressed = True
