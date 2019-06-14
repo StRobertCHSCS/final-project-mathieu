@@ -92,7 +92,7 @@ class MyGame(arcade.Window):
             for y in range(0, 601, 300):
                 # Randomly skip a box so the player can find a way through
                 if random.randrange(10) > 1:
-                    wall = arcade.Sprite("Image/tunnel.png", 0.1)
+                    wall = arcade.Sprite("Image/tunnel.png", 6)
                     wall.center_x = 350
                     wall.center_y = y
                     self.wall_list.append(wall)
