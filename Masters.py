@@ -7,9 +7,7 @@ class Game(arcade.Window):
 
     def __init__(self, width, height):
 
-        """
-        Initializer for the game window, note that we need to call setup() on the game object.
-        """
+
         super().__init__(width, height, title="Flappy Pipe!")
 
         self.sprites = None
@@ -58,29 +56,21 @@ class Game(arcade.Window):
         self.pipe_sprites.append(start_pipe1[1])
 
     def draw_score_board(self):
-        """
-        Draws the score board
-        """
+
         self.score_board.draw()
 
     def draw_background(self):
-        """
-        Draws the background.
-        """
+
         arcade.draw_texture_rectangle(self.width // 2, self.height // 2, self.background.width, self.background.height,
                                       self.background)
 
     def draw_base(self):
-        """
-        Bet you expected what this does. :)
-        """
+
         arcade.draw_texture_rectangle(self.width//2, self.base.height//2, self.base.width, self.base.height, self.base, 0)
 
     def on_draw(self):
 
-        """
-        This is the method called when the drawing time comes.
-        """
+
         # Start rendering and draw all the objects
         arcade.start_render()
         # Calling "draw()" on a SpriteList object will call it on each child in the list.
@@ -127,3 +117,90 @@ class Game(arcade.Window):
                 if h - texture.height//2 <= y <= h + texture.height//2:
                     self.setup()
                     self.state = State.MAIN_MENU
+
+
+    def scoreboard(self):
+
+        score_length = len(str(self.score))
+        score_width = 24 * score_length
+        left = (self.width - score_width) // 2
+        self.score_board = arcade.SpriteList()
+        for i in str(self.score):
+            self.score_board.append(arcade.Sprite(SCORE[i], 1, center_x=left + 12, center_y=450))
+            left += 24
+
+    def on_update(self, delta_time):
+
+        # print(delta_time)
+        # Whatever the state, update the bird animation (as in advance the animation to the next frame)
+        self.pipe_list.update_animation()
+
+        if self.state == State.PLAYING:
+            # If the player pressed space, let the bird fly higher
+            if self.jump:
+                arcade.play_sound(sounds['wing'])
+                self.pipe.jump()
+                self.jump = False
+
+            # Check if bird is too low
+            if self.pipe.bottom <= self.base.height:
+                if self.pipe.change_y < 0:
+                    self.pipe.change_y = 0
+                self.pipe.bottom = self.base.height
+
+            # Check if bird is too high
+            if self.pipe.top > self.height:
+                self.pipe.top = self.height
+
+            new_bird = None
+
+            # Kill pipes that are no longer shown on the screen as they're useless and live in ram and create a new pipe
+            # when needed. (If the center_x of the closest pipe to the bird passed the middle of the screen)
+            for bird in self.bird_sprites:
+                if bird.right <= 0:
+                    bird.kill()
+                elif len(self.bird_sprites) == 2 and bird.right <= random.randrange(self.width // 2,
+                                                                                    self.width // 2 + 15):
+                    new_bird = Bird.random_bird_obstacle(self.sprites, self.height)
+
+            if new_bird:
+                self.bird_sprites.append(new_bird[0])
+                self.bird_sprites.append(new_bird[1])
+
+            # This calls "update()" Method on each object in the SpriteList
+            self.pipe.update(delta_time)
+            self.pipe_list.update()
+            self.bird_sprites.update()
+
+            # If the bird passed the center of the pipe safely, count it as a point.
+            # Hard coding.. :)
+            if self.pipe.center_x >= self.bird_sprites[0].center_x and not self.bird_sprites[0].scored:
+                arcade.play_sound(sounds['point'])
+                self.score += 1
+                # Well, since each "obstacle" is a two pipe system, we gotta count them both as scored.
+                self.bird_sprites[0].scored = True
+                self.bird_sprites[1].scored = True
+                print(self.score)
+
+            # Check if the bird collided with any of the pipes
+            hit = arcade.check_for_collision_with_list(self.pipe, self.bird_sprites)
+
+            if any(hit):
+                arcade.play_sound(sounds['hit'])
+
+                self.state = State.GAME_OVER
+                self.pipe.die()
+
+        elif self.state == State.GAME_OVER:
+            # We need to keep updating the bird in the game over scene so it can still "die"
+            self.pipe.update()
+
+            self.scoreboard()
+
+    def main():
+        game = Game(288, 512)
+        game.setup()
+        arcade.run()
+
+    if __name__ == "__main__":
+        main()
