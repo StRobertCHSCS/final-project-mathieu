@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 Name: FinalProject.py
 
-Description: Tappy Tunnel
+Description: Tappy Tunnel, a version of the very famous game flappy bird
 
 Author: Mathieu Li
 
@@ -13,7 +13,6 @@ Date: June 2019
 import arcade
 import random
 import os
-
 
 class State():
     MAIN_MENU = 1
@@ -28,13 +27,14 @@ ground = "Objects" + os.sep + "sprites" + os.sep + "base.png"
 # List of different background images (Day / Night) (Choose one)
 play = "Objects" + os.sep + "sprites" + os.sep + "play.png"
 background = ["Objects" + os.sep + "sprites" + os.sep + "background-night.png","Objects" + os.sep + "sprites" + os.sep + "neon.jpg"
-               ,"Objects" + os.sep + "sprites" + os.sep + "background 1.jpg"]
+               ,"Objects" + os.sep + "sprites" + os.sep + "background 1.jpg","Objects" + os.sep + "sprites" + os.sep + "cloudsky.jpg"]
 # Dict holding the animation images for different birds colors (Choose one)
 pipes = ["Objects" + os.sep + "sprites" + os.sep + "pipe-green.png"]
 
 # Start screen (Tap tap!)
 ready = "Objects" + os.sep + "sprites" + os.sep + "presspace.png"
 ready_message = "Objects" + os.sep + "sprites" + os.sep + "Readymessage.png"
+volume = "Objects" + os.sep + "sprites" + os.sep + "soundup.png"
 
 highscore = "Objects" + os.sep + "sprites" + os.sep + "highscore.png"
 # Game over logo
@@ -46,7 +46,6 @@ sounds = {'jump': arcade.load_sound("Objects" + os.sep + "audio" + os.sep + "jum
           'point': arcade.load_sound("Objects" + os.sep + "audio" + os.sep + "point.wav"),
           'zombie': arcade.load_sound("Objects" + os.sep + "audio" + os.sep + "pain.wav"),
           'coin': arcade.load_sound("Objects" + os.sep + "audio" + os.sep + "coin.wav")}
-
 
 SCORE = {
     '0': 'Objects' + os.sep + 'sprites' + os.sep + '0.png',
@@ -139,7 +138,7 @@ class Bird(arcade.Sprite):
         """
         super().__init__(image, scale)
         # the amount of pixels the pipe move each frame.
-        self.horizontal_speed = -1.5
+        self.horizontal_speed = -1.8
         # Just a boolean to check if the bird passed this pipe successfully.
         self.scored = False
 
@@ -171,21 +170,20 @@ class Game(arcade.Window):
         Initializer for the game window, note that we need to call setup() on the game object.
         """
         super().__init__(width, height, title= "Tappy Tunnel!")
-
-        self.sprites = None
-        self.bird_sprites = None
-        self.pipe = None
-        # Background texture
         self.background = None
         # Base texture
         self.base = None
         # List of birds, even though we've only one bird, it's better to draw a SpriteList than to draw a Sprite
         self.pipe_list = None
+        self.sprites = None
+        self.bird_sprites = None
+        self.pipe = None
+        # Background texture
+
         # Score texture
         self.score_board = None
         #highscore
         self.highscore = None
-        self.get_highscore = None
         self.new_highscore = None
         # A boolean to check if the user tapped
         self.jump = False
@@ -198,32 +196,30 @@ class Game(arcade.Window):
                       'ready': arcade.load_texture(ready_message),
                       'gameover': arcade.load_texture(gameover),
                       'play': arcade.load_texture(play),
-                      'highscore': arcade.load_texture(highscore)}
+                      'highscore': arcade.load_texture(highscore),
+                      'volume': arcade.load_texture(volume)}
 
     def setup(self):
+        self.highscore = None
         self.score = 0
-        self.highscore = 0
         self.score_board = arcade.SpriteList()
-        self.get_highscore = arcade.SpriteList()
+        self.background = arcade.load_texture(random.choice(background))
+        self.base = arcade.load_texture(ground)
         self.bird_sprites = arcade.SpriteList()
         self.pipe_list = arcade.SpriteList()
         # A dict holding sprites of static stuff like background & base
-        self.background = arcade.load_texture(random.choice(background))
-        self.base = arcade.load_texture(ground)
         # A dict holding a reference to the textures
         self.sprites = dict()
         self.sprites['background'] = self.background
         self.sprites['base'] = self.base
         # The bird object itself.
         # The AnimatedTimeSprite makes an animated sprite that animates over time.
-        self.pipe = Pipes(50, self.height//2, self.base.height)
-
-        self.pipe_list.append(self.pipe)
-
         # Create a random pipe (Obstacle) to start with.
         start_bird1 = Bird.random_bird_obstacle(self.sprites, self.height)
         self.bird_sprites.append(start_bird1[0])
         self.bird_sprites.append(start_bird1[1])
+        self.pipe = Pipes(55, self.height//2, self.base.height)
+        self.pipe_list.append(self.pipe)
 
     def draw_score_board(self):
         """
@@ -265,6 +261,8 @@ class Game(arcade.Window):
             arcade.draw_texture_rectangle(self.width//2, self.height//2 + 50, 250, 50, texture, 0)
             texture = self.menus['ready']
             arcade.draw_texture_rectangle(self.width//2,self.height//2 +100,250,200,texture,0)
+            texture = self.menus['volume']
+            arcade.draw_texture_rectangle(self.width//2,self.height//2 - 50,100,100,texture,0)
 
         elif self.state == State.PLAYING:
             # Draw the score board when the player start playing.
@@ -313,16 +311,9 @@ class Game(arcade.Window):
         center = 230
         self.score_board = arcade.SpriteList()
 
-        for s in str(self.score):
-            self.score_board.append(arcade.Sprite(SCORE[s], 1, center_x= center , center_y=440))
+        for num in str(self.score):
+            self.score_board.append(arcade.Sprite(SCORE[num], 1, center_x= center , center_y=440))
             center += 24
-
-    def get_high_score(self):
-
-        if self.score > self.highscore:
-            self.highscore = self.score
-
-            self.new_highscore = True
 
 
     def on_update(self, delta_time):
@@ -335,6 +326,7 @@ class Game(arcade.Window):
         self.pipe_list.update_animation()
 
         if self.state == State.PLAYING:
+
             # If the player pressed space, let the bird fly higher
             if self.jump:
                 arcade.play_sound(sounds['jump'])
