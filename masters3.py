@@ -138,20 +138,20 @@ def on_draw():
     arcade.start_render()
 
 
-    texture_3 = arcade.load_texture("Image/background.jpg")
+    texture_3 = arcade.load_texture("Image/backgrounds.jpg")
     arcade.draw_texture_rectangle(150, 230, WIDTH, HEIGHT+50, texture_3)
     # Draw in here...
     for x, y in zip(tunnelx_positions, tunnely_positions):
-        texture = arcade.load_texture("Image/pipe3.png")
+        texture = arcade.load_texture("Image/pipse3.png")
         arcade.draw_texture_rectangle(x,y,250,600,texture)
 
     for x,y in zip(tunnel_x_positions, tunnel_y_positions):
-        texture = arcade.load_texture("Image/pipe3.png")
+        texture = arcade.load_texture("Image/pipes3.png")
         arcade.draw_texture_rectangle(x,y,250,600,texture)
 
 
     global player_x, player_y
-    texture_2 = arcade.load_texture("Image/character.png")
+    texture_2 = arcade.load_texture("Image/characters.png")
     arcade.draw_texture_rectangle(player_x, player_y, 45, 45, texture_2,angle)
 
     if player_y <= 0 or player_y >= HEIGHT:
