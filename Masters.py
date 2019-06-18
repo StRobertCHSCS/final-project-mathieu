@@ -10,36 +10,42 @@ Date: June 2019
 -----------------------------------------------------------------------------------------------------------------------
 '''
 
+#Import all the important libraries that will be used throughout the program
 import arcade
 import random
 import os
 
+
+#First class State() to create different game status of the player
 class State():
-    MAIN_MENU = 1
-    PLAYING = 2
-    GAME_OVER = 3
+    MAIN_MENU = 0
+    PLAYING = 1
+    GAME_OVER = 2
 
+'''
+Loading all the textures and sounds
+'''
 
-# List of different pipe images (Green / Red) (Choose one)
+# Texture for the bird
 birds = ["Objects" + os.sep + "sprites" + os.sep + "yellowbird-downflap.png"]
 # Image of the base floor
 ground = "Objects" + os.sep + "sprites" + os.sep + "base.png"
-# List of different background images (Day / Night) (Choose one)
-play = "Objects" + os.sep + "sprites" + os.sep + "play.png"
+# List of different background images that are chosen randomly by the random function
 background = ["Objects" + os.sep + "sprites" + os.sep + "background-night.png","Objects" + os.sep + "sprites" + os.sep + "neon.jpg"
                ,"Objects" + os.sep + "sprites" + os.sep + "background 1.jpg","Objects" + os.sep + "sprites" + os.sep + "cloudsky.jpg"]
-# Dict holding the animation images for different birds colors (Choose one)
+
+# image for the pipe
 pipes = ["Objects" + os.sep + "sprites" + os.sep + "pipe-green.png"]
 
-# Start screen (Tap tap!)
+# Start screen and game over images
+play = "Objects" + os.sep + "sprites" + os.sep + "play.png"
 ready = "Objects" + os.sep + "sprites" + os.sep + "presspace.png"
 ready_message = "Objects" + os.sep + "sprites" + os.sep + "Readymessage.png"
 volume = "Objects" + os.sep + "sprites" + os.sep + "soundup.png"
-
 highscore = "Objects" + os.sep + "sprites" + os.sep + "highscore.png"
-# Game over logo
 gameover = "Objects" + os.sep + "sprites" + os.sep + "gameover2.png"
-# dict mapping sound name to arcade sound object
+
+# Mapping sound name to arcade sound object in the form of dictionary
 sounds = {'jump': arcade.load_sound("Objects" + os.sep + "audio" + os.sep + "jump.wav"),
           'die': arcade.load_sound("Objects" + os.sep + "audio" + os.sep + "die.wav"),
           'hit': arcade.load_sound("Objects" + os.sep + "audio" + os.sep + "hit.wav"),
@@ -47,6 +53,7 @@ sounds = {'jump': arcade.load_sound("Objects" + os.sep + "audio" + os.sep + "jum
           'zombie': arcade.load_sound("Objects" + os.sep + "audio" + os.sep + "pain.wav"),
           'coin': arcade.load_sound("Objects" + os.sep + "audio" + os.sep + "coin.wav")}
 
+# Images for the different numbers used in scoring
 SCORE = {
     '0': 'Objects' + os.sep + 'sprites' + os.sep + '0.png',
     '1': 'Objects' + os.sep + 'sprites' + os.sep + '1.png',
@@ -59,27 +66,18 @@ SCORE = {
     '8': 'Objects' + os.sep + 'sprites' + os.sep + '8.png',
     '9': 'Objects' + os.sep + 'sprites' + os.sep + '9.png',}
 
-
-bird = random.choice(birds)
-
 # Minimum height for a pipe
 min_height = 50
+
 # Minimum gap between two pipes (The gap that a bird can go through)
-
-
 gap_size = 150
-
-# Minimum height for a pipe
-
-# Minimum gap between two pipes (The gap that a bird can go through)
-# MIN_GAP = 100
 
 # How many pixels per jump
 JUMP_DY = 60
 # How many pixels per frame
 JUMP_STEP = 6
 
-# Gravity pixels
+# Strength of gravity
 Gravity = 2
 
 class Pipes (arcade.AnimatedTimeSprite):
@@ -88,11 +86,7 @@ class Pipes (arcade.AnimatedTimeSprite):
         super().__init__(center_x=center_x, center_y=center_y)
         self.score = 0
         self.textures = []
-
-
         self.textures.append(arcade.load_texture(pipes[0], 0, 0, 0, 0, False, False, 0.5))
-
-
         self.vel = 0
         self.dy = 0
         self.death_height = death_height
@@ -146,11 +140,11 @@ class Bird(arcade.Sprite):
     def random_bird_obstacle(cls, sprites, height):
 
         # top_pipe.bottom = random.randrange(bottom_pipe.top + MIN_GAP, height - MIN_HEIGHT)
-        bottom_bird = cls(bird)
+        bottom_bird = cls(birds[0])
         bottom_bird.top = random.randrange(sprites['base'].height + min_height, height - gap_size - min_height)
         bottom_bird.left = 288
 
-        top_bird = cls(bird)
+        top_bird = cls(birds[0])
         top_bird.angle = 180
         top_bird.left = 288
         top_bird.bottom = bottom_bird.top + gap_size
@@ -273,7 +267,7 @@ class Game(arcade.Window):
             texture = self.menus['gameover']
             arcade.draw_texture_rectangle(self.width//2, self.height//2 + 50, 200, 100, texture, 0)
             texture = self.menus['play']
-            arcade.draw_texture_rectangle(self.width//2, self.height//2 - 100, texture.width, texture.height,texture, 0)
+            arcade.draw_texture_rectangle(self.width//2, self.height//2 - 50, texture.width, texture.height,texture, 0)
 
             if self.new_highscore == True:
                 texture = self.menus['highscore']
@@ -297,10 +291,10 @@ class Game(arcade.Window):
 
         if self.state == State.GAME_OVER:
             texture = self.menus['play']
-            w = self.width//2
-            h = self.height//2 - 100
-            if w - texture.width//2 <= x <= w + texture.width//2:
-                if h - texture.height//2 <= y <= h + texture.height//2:
+            x_position = self.width//2
+            y_position = self.height//2 - 50
+            if x_position - texture.width//2 <= x <= x_position + texture.width//2:
+                if y_position - texture.height//2 <= y <= y_position + texture.height//2:
                     self.setup()
                     self.state = State.MAIN_MENU
                     arcade.play_sound(sounds['coin'])
