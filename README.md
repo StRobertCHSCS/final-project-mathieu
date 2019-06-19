@@ -1,7 +1,7 @@
 # Final Project - Tappy Tunnel
 ## 1. Objective of the game
 ![Alt text](https://i.imgur.com/yOodX9p.gif)
-Tappy Tunnel is a game in which the player must hit the space bar to cause the player’s character, the green pipe,
+Tappy Tunnel(a version of flappy bird) is a game in which the player must hit the space bar to cause the player’s character, the green pipe,
 to move upwards and upon releasing the player's character will fall due to the gravity created in the game . The player must navigate the pipe through a series of openings between the flappy birds.
 Colliding with or getting near a bird flying towards results in a game over. Tappy Tunnel is not very agile and often hits hits against the top part of each opening. Every time he falls and dies, players can’t help but feel frustrated at having been defeated by what seems like such an easy game. 
 They keep trying over and over and over again to beat their previous scores.
@@ -21,3 +21,8 @@ hit the bottom bird.
 The scoring for Tappy Tunnel is simple, no extra points, bonuses or mushrooms that give you any extra abilities.
 You have to navigate the little pipe through gaps between the Flying birds. Tappy Tunnel must successfully fly through each gap without hitting any part of the bird.
 The player earns a point each time they pass an obstruction.
+
+##Screen Mockup
+![](mockup.jpg)
+I initially wanted to create Flappy bird, but then I thought that it would not be really creative.
+So I slightly modified flappy bird to create a new game Tappy Tunnel.
