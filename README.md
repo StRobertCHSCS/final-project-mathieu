@@ -16,7 +16,7 @@ hit the bottom bird.
 * Do not crash into a bird or your game is over
 * Play again and try to beat your high score!
 
-###Scoring
+##Scoring
 ![alt text](https://cdn.wccftech.com/wp-content/uploads/2014/02/flap.jpg)
 The scoring for Tappy Tunnel is simple, no extra points, bonuses or mushrooms that give you any extra abilities.
 You have to navigate the little pipe through gaps between the Flying birds. Tappy Tunnel must successfully fly through each gap without hitting any part of the bird.
