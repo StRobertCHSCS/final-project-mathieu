@@ -67,7 +67,7 @@ SCORE = {
     '8': 'Objects' + os.sep + 'sprites' + os.sep + '8.png',
     '9': 'Objects' + os.sep + 'sprites' + os.sep + '9.png',}
 
-# Minimum height for a bird
+# Minimum height for a bird obstacle
 min_height = 50
 
 # Minimum gap between two birds (The gap that a pipe can go through)
@@ -100,8 +100,7 @@ class Pipes (arcade.AnimatedTimeSprite):
 
         if self.vel > 0:
             self.center_y += 2
-            # self.center_y += self.vel
-            # set self.vel = 0
+            # self.vel initially set to 0
             self.vel -= 2
             if self.angle < -50:
                 self.angle = -80
@@ -344,7 +343,7 @@ class Game(arcade.Window):
 
             new_bird = None
 
-            # Kill birds that are no longer shown on the screen and create a new bird obstacle
+            # Remove birds that are no longer shown on the screen and create a new bird obstacle
             for bird in self.bird_sprites:
                 if bird.right <= 0:
                     bird.kill()
@@ -361,7 +360,7 @@ class Game(arcade.Window):
             self.bird_sprites.update()
 
 
-            # If the pipe passsed the center of the birds safely, count it as a point.
+            # If the pipe passsed the center of the birds safely,update the score by one.
             if self.pipe.center_x >= self.bird_sprites[0].center_x and not self.bird_sprites[0].scored:
                 arcade.play_sound(sounds['point'])
                 self.score += 1
