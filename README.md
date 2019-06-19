@@ -24,5 +24,4 @@ The player earns a point each time they pass an obstruction.
 
 ##Screen Mockup
 ![](mockup.jpg)
-I initially wanted to create Flappy bird, but then I thought that it would not be really creative.
-So I slightly modified flappy bird to create a new game Tappy Tunnel.
+I initially wanted to create Flappy bird, but then I thought that it would not be really creative. So I created a new game Tappy Tunnel based on Flappy Bird
