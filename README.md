@@ -10,18 +10,19 @@ They keep trying over and over and over again to beat their previous scores.
 Tappy Tunnel does not contain any microtransactions or variations in difficulty. For the player to navigate the bird through
 the pipes they must time their space bar taps so as not to rise high enough to hit the top bird and so as not to fall low enough to 
 hit the bottom bird. 
-###controls
+
+## 3. controls
 * Press ![alt text](http://chittagongit.com/images/spacebar-icon/spacebar-icon-25.jpg) to fly the Green pipe
 * Get a point for every set of birds you pass through
 * Do not crash into a bird or your game is over
 * Play again and try to beat your high score!
 
-##Scoring
+## 4. Scoring
 ![alt text](https://cdn.wccftech.com/wp-content/uploads/2014/02/flap.jpg)
 The scoring for Tappy Tunnel is simple, no extra points, bonuses or mushrooms that give you any extra abilities.
 You have to navigate the little pipe through gaps between the Flying birds. Tappy Tunnel must successfully fly through each gap without hitting any part of the bird.
 The player earns a point each time they pass an obstruction.
 
-##Screen Mockup
+## 5. Screen Mockup
 ![](mockup.jpg)
 I initially wanted to create Flappy bird, but then I thought that it would not be really creative. So I created a new game Tappy Tunnel based on Flappy Bird
